@@ -1,5 +1,5 @@
 '''
-Function to calculate Precision, Recall, F-Score, 
+Function to calculate 
 IOU by taking the given groundtruth xml file from 
 the same location as the image
 '''
