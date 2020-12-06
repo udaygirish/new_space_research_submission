@@ -4,4 +4,7 @@ pandas
 opencv-python
 scikit-learn
 tqdm
-
+json
+glob
+argparse
+scikit-spatial

@@ -8,6 +8,9 @@ import glob
 from tqdm import tqdm
 import numpy as np
 from utils.ioupr_calc import compute_avg_iou
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 
 def get_output_paths(input_paths, target_dir):
     output_paths = []
@@ -23,8 +26,9 @@ def main():
     parser = argparse.ArgumentParser()  
     parser.add_argument("-mp", "--model_path", required=True, help = "saved model path (folder name) or frozen graph file path") 
     parser.add_argument("-i", "--image_path", required=True, help = "Image path") 
-    parser.add_argument("-o", "--output_path", default="test_data/output", help="output image path")
+    parser.add_argument("-o", "--output_path", default="output", help="output image path")
     #parser.add_argument("-b", "--benchmark", action='store_true', help="Do benchmark")
+    parser.add_argument("-ci","--iou_calc",default=True,help="To specify whether to calculate mAP or not")
     args = parser.parse_args() 
     
     os.makedirs(args.output_path, exist_ok=True)
@@ -32,7 +36,6 @@ def main():
     obj_det = ObjectDetection(saved_model_dir_or_fg)
     
     if os.path.isdir(args.image_path):
-        print("Im here")
         file_types = ('*.jpeg','*.jpg', '*.png')
         file_paths = []
         for f_type in file_types:
@@ -51,8 +54,11 @@ def main():
         for bbox in detections:            
             overlay_bbox(original_image, bbox, obj_det.label2color)
         print(len(detections))
-        iou_threshold=0.1
-        compute_avg_iou(img_path,detections,iou_threshold)
+        iou_threshold=0.0
+        if args.iou_calc==True:
+            compute_avg_iou(img_path,detections,iou_threshold)
+        else:
+            pass
         cv2.imwrite(output_paths[i], original_image)
     
 

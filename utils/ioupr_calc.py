@@ -88,9 +88,11 @@ class IOU_PR_Calc():
         return associated_keys,associated_iou
     
     def _compute_iou(self,image_path,detections):
-        self.xml_path = image_path.split(".")[-2]+".xml"
+        self.xml_path = "./"+image_path.split(".")[-2]+".xml"
         self.bbox_coord, self.class_ids,self.size_list = ps("./",self.xml_path)
         self.bbox_coord = self.bbox_coord.tolist()
+        length_gc_coord = len(self.bbox_coord)
+        length_pc_coord = len(detections)
         self.detections = detections
         self.bbox_gc_coord = self.bbox_gc_conv(self.bbox_coord,self.class_ids)
         self.bbox_pc_coord = self.bbox_pc_conv(self.detections)
@@ -98,14 +100,22 @@ class IOU_PR_Calc():
         self.bbox_gc_dict = self.find_centroid_and_append(self.bbox_gc_coord)
         self.bbox_pc_dict = self.find_centroid_and_append(self.bbox_pc_coord)
         self.ass_keys, self.ass_iou = self.associate_keys_calc_iou(self.bbox_pc_dict,self.bbox_gc_dict)
-        print("IOU_LIST:{}, ASSOCIATED_BOX_LIST:{}".format(self.ass_iou,self.ass_keys))
-        return self.ass_iou, self.ass_keys
+        #print("IOU_LIST:{}, ASSOCIATED_BOX_LIST:{}".format(self.ass_iou,self.ass_keys))
+        return self.ass_iou, self.ass_keys,length_gc_coord,length_pc_coord
     
 
-
+ 
 
 def compute_avg_iou(image_path,detections,threshold):
     iou_calc = IOU_PR_Calc()
-    ass_iou,ass_keys = iou_calc._compute_iou(image_path,detections)
-    avg_iou = np.mean([ass_iou for i in ass_iou if i>threshold])
-    print("THE AVERAGE IOU is :{}".format(avg_iou))
+    ass_iou,ass_keys, l_gc_coord,l_pc_coord = iou_calc._compute_iou(image_path,detections)
+    ass_iou = [i for i in ass_iou if i>threshold]
+    avg_sum = np.sum(ass_iou)
+    avg_iou = round(avg_sum/l_pc_coord,3)
+    avg_w_iou = round(avg_sum/l_gc_coord,3)
+    print("-------------------------------------------------------------------")
+    print("-------------------------------------------------------------------")
+    print("THE AVERAGE IOU without undetected entities is :{}".format(avg_iou))
+    print("The AVERAGE IOU with undetected entities is :{}".format(avg_w_iou))
+    print("-------------------------------------------------------------------")
+    print("-------------------------------------------------------------------")

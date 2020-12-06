@@ -1,5 +1,8 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow.compat.v1 as tf1
 import tensorflow as tf
+tf.get_logger().setLevel('ERROR')
 import cv2
 import json
 import numpy as np
