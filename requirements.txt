@@ -1,0 +1,10 @@
+selenium
+tqdm
+pandas
+numpy
+argparse
+urllib3
+BeautifulSoup4
+wordcloud
+matplotlib
+Pillow
