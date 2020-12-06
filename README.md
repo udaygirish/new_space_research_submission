@@ -6,7 +6,7 @@ Repository for submitting the task for initial screening (Object Detection and D
 "sudo pip3 install -r requirements.txt" in your terminal.
 * To evaluate the output please run  bash test_script.sh in your terminal
 
-### This repo is for object detection(Person) task on a single image (Aerial View)
+### This Branch is for object detection(Person) task on a single image (Aerial View)
 <ul>
 <li> This script currently works on pretrained model alone. </li>
 <li> Because of the above reason the average IOU might be less as the detections are less </li>
